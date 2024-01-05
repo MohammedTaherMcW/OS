@@ -32,7 +32,7 @@ int main()
          perror("shmget");
          exit(EXIT_FAILURE);
       }
-      // Attach to the shared memory
+
       ImageInfo *shared_info = (ImageInfo *)shmat(shm_id, NULL, 0);
       if (shared_info == (void *)-1)
       {
@@ -75,14 +75,13 @@ int main()
          exit(EXIT_FAILURE);
       }
       char *char_shared_memory = (char *)shared_memory;
+      // Generating Gray Image from Colored Image
       char *gray_img = malloc(width * height * channels);
-      char *neg_img = malloc(width * height * channels);
       if (gray_img == NULL)
       {
          printf("Unable to allocate memory for the gray image.\n");
          exit(1);
       }
-
       for (char *p = char_shared_memory, *pg = gray_img; p != char_shared_memory + width * height * channels; p += channels, pg += 1)
       {
          *pg = (uint8_t)((*p + *(p + 1) + *(p + 2)) / 3.0);
@@ -91,17 +90,20 @@ int main()
             *(pg + 1) = *(p + 3);
          }
       }
+      char *neg_img = malloc(width * height * channels);
+      // Genrating Negative Image from Colored Image
       for (char *np = neg_img, *pg = gray_img; pg != gray_img + width * height * channels; pg += 1, np += 1)
       {
          *np = 255 - *pg;
       }
       size_t img_size = width * height * channels;
-
+      // Assigning the Negative image to Shared Memory
       for (int i = 0; i < img_size; i++)
       {
          shared_memory[i] = neg_img[i];
       }
       shared_memory[img_size] = '\0';
+      // Notifying that Image has been Send
       printf("\nImage Send");
 
       if (shmdt(shared_memory) == -1)

@@ -23,13 +23,12 @@ int main()
     int shmid;
     int width, height, channels;
     char str[Max_Limit];
-
+    // Getting name from Client
     printf("Enter the Image Name : ");
     scanf("%s", str);
-    // strcpy(str, argv[1]);
     strcpy(buff, str);
     strcat(str, ".jpg");
-    puts(str);
+
     unsigned char *img = stbi_load(str, &width, &height, &channels, 0);
     if (img == NULL)
     {
@@ -50,10 +49,12 @@ int main()
         perror("shmat");
         exit(EXIT_FAILURE);
     }
+    // Waiting till Server is free
     while (shared_info->width != -1)
     {
         sleep(5);
     }
+    // Client Executing when Server is free
     if (shared_info->width == -1)
     {
 
@@ -86,7 +87,7 @@ int main()
             fprintf(stderr, "Image size exceeds the shared memory segment size.\n");
             exit(EXIT_FAILURE);
         }
-
+        // Assigning data to shared memory
         for (int i = 0; i < img_size; i++)
         {
             shared_memory[i] = img[i];
@@ -96,6 +97,7 @@ int main()
         sleep(2);
 
         strcat(buff, "_Negative.jpg");
+        // Generating Negative Image using Shared memory
         stbi_write_jpg(buff, width, height, 1, shared_memory, width);
         printf("\n Image Generated");
         stbi_image_free(img);
