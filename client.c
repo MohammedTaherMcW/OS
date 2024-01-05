@@ -23,11 +23,10 @@ int main()
     int shmid;
     int width, height, channels;
     char str[Max_Limit];
-    // Getting name from Client
+    //Enter the Name of the Image - Include format name aswell
     printf("Enter the Image Name : ");
     scanf("%s", str);
     strcpy(buff, str);
-    strcat(str, ".jpg");
 
     unsigned char *img = stbi_load(str, &width, &height, &channels, 0);
     if (img == NULL)
@@ -95,8 +94,8 @@ int main()
         shared_memory[img_size] = '\0';
 
         sleep(2);
-
-        strcat(buff, "_Negative.jpg");
+        char* tok = strtok(buff,".");
+        strcat(tok, "_Negative.jpg");
         // Generating Negative Image using shared memory
         stbi_write_jpg(buff, width, height, 1, shared_memory, width);
         printf("\n Image Generated");
