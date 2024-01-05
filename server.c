@@ -24,6 +24,7 @@ int main()
    int size;
    char buff[100];
    int width, channels, height;
+   puts("Initiating Server..");
    while (1)
    {
       int shm_id = shmget(123, sizeof(ImageInfo), 0666 | IPC_CREAT);
@@ -40,14 +41,15 @@ int main()
          exit(EXIT_FAILURE);
       }
       shared_info->width = -1;
+      int i=0;
+      printf("\nWaiting for clients..\n");
       while (shared_info->width == -1)
       {
-         printf("\nWaiting for clients..");
-
          sleep(2);
       }
 
       printf("\nClient got Connected");
+      i=0;
       width = shared_info->width;
       height = shared_info->height;
 
