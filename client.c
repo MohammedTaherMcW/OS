@@ -97,6 +97,7 @@ int main()
         char* tok = strtok(buff,".");
         strcat(tok, "_Negative.jpg");
         // Generating Negative Image using shared memory
+        
         stbi_write_jpg(buff, width, height, 1, shared_memory, width);
         printf("\n Image Generated");
         stbi_image_free(img);
