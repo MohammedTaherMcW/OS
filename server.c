@@ -41,7 +41,6 @@ int main()
          exit(EXIT_FAILURE);
       }
       shared_info->width = -1;
-      int i=0;
       printf("\nWaiting for clients..\n");
       while (shared_info->width == -1)
       {
@@ -49,7 +48,6 @@ int main()
       }
 
       printf("\nClient got Connected");
-      i=0;
       width = shared_info->width;
       height = shared_info->height;
 
