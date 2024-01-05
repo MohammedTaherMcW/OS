@@ -23,7 +23,7 @@ int main()
     int shmid;
     int width, height, channels;
     char str[Max_Limit];
-    //Enter the Name of the Image - Include format name aswell
+    //Enter the Name of the Image - Include format name as well
     printf("Enter the Image Name : ");
     scanf("%s", str);
     strcpy(buff, str);
